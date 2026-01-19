@@ -1,0 +1,10 @@
+targets:
+  $default:
+    builders:
+      isar_generator|isar_generator:
+        enabled: true
+      riverpod_generator|riverpod_generator:
+        enabled: true
+      drift_dev:
+        options:
+          store_date_time_values_as_text: true
