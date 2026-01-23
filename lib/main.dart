@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:screen_retriever/screen_retriever.dart';
 import 'src/features/mood/presentation/screens/mood_flow_screen.dart';
+import 'package:system_tray/system_tray.dart';
+import 'package:launch_at_startup/launch_at_startup.dart';
 
 // The main function runs the app and initializes the window manager.
 void main() async {
@@ -10,6 +13,20 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // We initialize the window manager.
   await windowManager.ensureInitialized();
+
+  // Setup Launch at Startup
+  launchAtStartup.setup(
+    appName: 'MoodFlow',
+    appPath: Platform.resolvedExecutable,
+  );
+  await launchAtStartup.enable();
+
+  // Setup System Tray
+  final SystemTray systemTray = SystemTray();
+  await systemTray.initSystemTray(
+    iconPath: 'assets/icons/tray_ph.ico', // Needs an .ico file for Windows!
+    title: 'MoodFlow',
+  );
 
   // We set the window options.
   WindowOptions windowOptions = WindowOptions(
