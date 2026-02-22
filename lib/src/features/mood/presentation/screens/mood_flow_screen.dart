@@ -79,22 +79,12 @@ class _MoodFlowScreenState extends ConsumerState<MoodFlowScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: const Text(
-                    'It is time for your daily mood check-in!',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Padding(
                   padding: const EdgeInsets.only(top: 4.0, bottom: 20.0),
                   child: const Text(
                     'How are you feeling today?',
                     style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),

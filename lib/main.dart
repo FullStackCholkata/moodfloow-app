@@ -24,15 +24,17 @@ void main() async {
   // Setup System Tray
   final SystemTray systemTray = SystemTray();
   await systemTray.initSystemTray(
-    iconPath: 'assets/icons/tray_ph.ico', // Needs an .ico file for Windows!
+    iconPath: Platform.isWindows ? 'assets/icons/tray_ph.ico' : 'assets/icons/tray_ph.png',
     title: 'MoodFlow',
   );
 
   // We set the window options.
   WindowOptions windowOptions = WindowOptions(
     size: Size(450, 380),
+    minimumSize: Size(450, 380),
+    maximumSize: Size(450, 380),
+    skipTaskbar: false, // allows minimize to taskbar/dock
     titleBarStyle: TitleBarStyle.hidden,
-    alwaysOnTop: true,
   );
 
   // We apply the window options.
@@ -42,15 +44,31 @@ void main() async {
         );
     Size windowSize = await windowManager.getSize();
     double x = (screenSize.width - windowSize.width);
-    double y = (screenSize.height - windowSize.height);
+    double y;
+
+    if (Platform.isMacOS) {
+      // Top-right on macOS
+      y = 0;
+    } else {
+      // Bottom-right on Windows (and other platforms)
+      y = (screenSize.height - windowSize.height);
+    }
 
     await windowManager.setPosition(Offset(x, y));
-    await windowManager.show();
-    await windowManager.focus();
+    // Don't show window yet - wait for Flutter to render first frame
   });
 
   // Finally, we run the app.
   runApp(const ProviderScope(child: MoodFlowApp()));
+  
+  // Show window only after first frame is rendered
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+    // Small delay to ensure rendering is complete
+    await Future.delayed(Duration(milliseconds: 100));
+    await windowManager.setOpacity(1.0);
+    await windowManager.show();
+    await windowManager.focus();
+  });
 }
 
 class MoodFlowApp extends StatelessWidget {
